@@ -1,0 +1,233 @@
+# 📋 BaraniQuiz Project - Technical Summary
+
+## Project Overview
+**BaraniQuiz** - A Quiz Generator Application for educational purposes (Math subjects)
+
+---
+
+## 🔧 BACKEND (C# ASP.NET Core)
+
+**Location:** `C:\Users\ahsan\source\repos\BaraniQuizAPI`
+
+### Technology Stack:
+| Component | Technology |
+|-----------|------------|
+| Framework | ASP.NET Core 8.0 Web API |
+| Language | C# |
+| Database | Microsoft SQL Server |
+| ORM/DB Access | ADO.NET (SqlConnection, SqlCommand) |
+| Documentation | Swagger/OpenAPI |
+| Configuration | IConfiguration |
+| Port | `http://localhost:7297` |
+
+### Database Structure:
+**Table:** `Users`
+| Column | Type |
+|--------|------|
+| Id | INT (Primary Key) |
+| Name | VARCHAR |
+| Email | VARCHAR (Unique) |
+| Password | VARCHAR |
+
+### API Endpoints:
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/Auth/login` | User login (email, password) |
+| POST | `/api/Auth/signup` | User registration (name, email, password) |
+
+### Files Created:
+```
+BaraniQuizAPI/
+├── Program.cs              # App configuration, CORS, Swagger
+├── Controllers/
+│   └── AuthController.cs   # Login & Signup endpoints
+├── Models/
+│   └── Loginmodel.cs       # Request/Response models
+├── Data/
+│   └── DatabaseHelper.cs   # Database operations (CRUD)
+└── Properties/
+    └── launchSettings.json # Server configuration
+```
+
+---
+
+## 📱 FRONTEND (Flutter)
+
+**Location:** `C:\Users\ahsan\StudioProjects\myproject`
+
+### Technology Stack:
+| Component | Technology |
+|-----------|------------|
+| Framework | Flutter 3.9.x |
+| Language | Dart |
+| HTTP Client | `http: ^1.6.0` |
+| Database | `sqflite: ^2.3.0` (for local storage) |
+| Crypto | `crypto: ^3.0.3` |
+| Icons | cupertino_icons |
+
+### Features Implemented:
+| Feature | Status |
+|---------|--------|
+| Login Screen | ✅ Complete |
+| Signup Screen | ✅ Complete |
+| Form Validation | ✅ Complete |
+| API Integration | ✅ Complete |
+| Home Screen | ✅ Complete |
+| Subject List UI | ✅ Complete |
+| Bottom Navigation | ✅ Complete |
+
+### Files Created:
+```
+lib/
+├── main.dart                 # App entry point
+├── services/
+│   └── auth_service.dart     # API calls (login/signup)
+└── Screens/
+    ├── login_screen.dart     # Login & Signup UI
+    └── home_screen.dart      # Home with subjects
+```
+
+### UI Features:
+- Modern gradient design
+- Animated tab switching
+- Card-style input fields
+- Password visibility toggle
+- Loading indicators
+- Error handling with snackbars
+- Responsive layout
+
+---
+
+## 🔗 Connection Flow
+
+```
+Flutter App  →  http://localhost:7297  →  ASP.NET Core API  →  SQL Server Database
+   (Dart)                                    (C#)                    (Users Table)
+```
+
+---
+
+## ✅ Completed Features:
+1. User Registration (Signup)
+2. User Login
+3. Database connection (SQL Server)
+4. REST API endpoints
+5. Flutter API integration
+6. Professional UI/UX design
+
+## ⏳ Pending Features:
+- Quiz functionality screens
+- Explain & Notes screens
+- Quiz questions management
+- Score tracking
+- User profile management
+- JWT authentication (optional upgrade)
+
+---
+
+## 📁 Project Structure
+
+### Backend Structure:
+```
+C:\Users\ahsan\source\repos\BaraniQuizAPI\
+└── BaraniQuizAPI/
+    ├── BaraniQuizAPI.sln
+    ├── BaraniQuizAPI/
+    │   ├── BaraniQuizAPI.csproj
+    │   ├── Program.cs
+    │   ├── Controllers/
+    │   │   └── AuthController.cs
+    │   ├── Models/
+    │   │   └── Loginmodel.cs
+    │   ├── Data/
+    │   │   └── DatabaseHelper.cs
+    │   └── Properties/
+    │       └── launchSettings.json
+    └── BaraniQuizAPI/
+
+### Frontend Structure:
+```
+C:\Users\ahsan\StudioProjects\myproject\
+├── pubspec.yaml
+├── lib/
+│   ├── main.dart
+│   ├── services/
+│   │   └── auth_service.dart
+│   └── Screens/
+│       ├── login_screen.dart
+│       └── home_screen.dart
+├── import_quiz_data.py          # Data import script
+├── requirements.txt             # Python dependencies
+├── DATABASE-QUIZ-GENERTOR.xlsx  # Excel data file
+├── PROJECT_SUMMARY.txt           # This file
+├── check_tables.py              # Utility script
+├── check_identity.py            # Utility script
+└── check_constraints.py         # Utility script
+```
+
+---
+
+## 🛠️ How to Run
+
+### Backend:
+1. Open `C:\Users\ahsan\source\repos\BaraniQuizAPI` in Visual Studio
+2. Press F5 or click "Run" to start the API
+3. API will run at `http://localhost:7297`
+4. Access Swagger at `http://localhost:7297/swagger`
+
+### Frontend:
+1. Open `C:\Users\ahsan\StudioProjects\myproject` in VS Code
+2. Run `flutter pub get` to install dependencies
+3. Run `flutter run` to start the app
+4. App connects to backend at `http://localhost:7297/api`
+
+---
+
+## 📊 Database Configuration
+
+### SQL Server:
+- Server: `AHSAN_SHAHID\\MSSQLSERVER01`
+- Database: `BaraniQuizDB`
+- Authentication: Windows Authentication (Trusted Connection)
+
+### Database Tables:
+| Table | Columns | Rows |
+|-------|---------|------|
+| Users | Id, Name, Email, Password | 0+ |
+| Subject | SubjectId, Name | 3 |
+| Topic | TopicId, SubjectId, TopicName | 149 |
+| KnowledgeChunk | ChunkId, SubjectId, TopicName, Week, Difficulty, Type, Content | 848 |
+| Quiz | QuizId, Title, SubjectId, etc. | - |
+| Question | QuestionId, QuizId, Content, etc. | - |
+| Attempt | AttemptId, UserId, QuizId, Score, etc. | - |
+| AttemptAnswer | AnswerId, AttemptId, QuestionId, Answer | - |
+| ExplainSession | SessionId, UserId, TopicId, etc. | - |
+
+### Data Import Script:
+Location: `import_quiz_data.py`
+- Reads: `DATABASE-QUIZ-GENERTOR.xlsx`
+- Imports unique subjects (3)
+- Imports unique topics (149)
+- Imports all knowledge chunks (848)
+- Shows row counts after import
+
+---
+
+## 🐍 Python Data Import Script
+
+### Requirements:
+```
+pandas>=2.0.0
+pyodbc>=5.0.0
+openpyxl>=3.1.0
+```
+
+### Run:
+```bash
+pip install -r requirements.txt
+python import_quiz_data.py
+```
+
+---
+
+Generated: April 2026
