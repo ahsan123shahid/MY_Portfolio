@@ -1,6 +1,7 @@
 'use client';
 
-import { useScroll, useTransform, motion, type MotionValue } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
 const sections = [
   {
@@ -49,40 +50,51 @@ const sections = [
 
 function Section({
   section,
-  scrollYProgress,
+  progress,
 }: {
   section: (typeof sections)[0];
-  scrollYProgress: MotionValue<number>;
+  progress: number;
 }) {
   const range = 0.16;
   const start = Math.max(section.at - range, 0);
   const end = Math.min(section.at + range, 1);
 
-  // Smooth fade-in/out
-  const opacity = useTransform(
-    scrollYProgress,
-    [start, section.at, end],
-    [0, 1, 0]
-  );
+  // Math-based linear interpolation for CSS values
+  let opacity = 0;
+  let y = 30;
+  let scale = 0.96;
 
-  // Parallax Y offset
-  const y = useTransform(
-    scrollYProgress,
-    [start, end],
-    [30, -30]
-  );
+  if (progress >= start && progress <= end) {
+    // Opacity fade-in / fade-out
+    if (progress < section.at) {
+      const denom = section.at - start;
+      opacity = denom > 0 ? (progress - start) / denom : 1;
+    } else {
+      const denom = end - section.at;
+      opacity = denom > 0 ? 1 - (progress - section.at) / denom : 0;
+    }
 
-  // Soft scale zoom
-  const scale = useTransform(
-    scrollYProgress,
-    [start, section.at, end],
-    [0.96, 1, 1.04]
-  );
+    // Parallax Y offset (30 to -30)
+    const ratio = (progress - start) / (end - start);
+    y = 30 - ratio * 60;
+
+    // Scale zoom (0.96 to 1.04)
+    scale = 0.96 + ratio * 0.08;
+  } else if (progress > end) {
+    opacity = 0;
+    y = -30;
+    scale = 1.04;
+  }
 
   return (
-    <motion.div
+    <div
       className={`absolute inset-0 flex ${section.align} pointer-events-none z-10`}
-      style={{ opacity, y, scale }}
+      style={{
+        opacity,
+        transform: `translateY(${y}px) scale(${scale})`,
+        willChange: 'transform, opacity',
+        transition: 'opacity 0.15s ease-out, transform 0.15s ease-out',
+      }}
     >
       <div className="max-w-5xl px-6 select-none pointer-events-auto">
         {section.subtitle && (
@@ -113,28 +125,48 @@ function Section({
           </button>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
 export default function Overlay({ containerRef }: { containerRef?: React.RefObject<HTMLDivElement> }) {
-  const { scrollYProgress } = useScroll(
-    containerRef
-      ? { target: containerRef as any, offset: ['start start', 'end end'] }
-      : undefined
-  );
+  const [progress, setProgress] = useState(0);
 
-  const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
+  useEffect(() => {
+    const handleScroll = () => {
+      const section = containerRef?.current;
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      const scrollableHeight = rect.height - window.innerHeight;
+      if (scrollableHeight <= 0) return;
+      
+      const scrolled = -rect.top;
+      const p = Math.min(Math.max(scrolled / scrollableHeight, 0), 1);
+      setProgress(p);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Initial check
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [containerRef]);
+
+  const scrollIndicatorOpacity = progress < 0.08 ? 1 - progress / 0.08 : 0;
 
   return (
     <div className="absolute inset-0 z-10 pointer-events-none">
       {sections.map((s, i) => (
-        <Section key={i} section={s} scrollYProgress={scrollYProgress} />
+        <Section key={i} section={s} progress={progress} />
       ))}
 
       {/* Floating Scroll Indicator */}
-      <motion.div 
-        style={{ opacity: scrollIndicatorOpacity }}
+      <div 
+        style={{ 
+          opacity: scrollIndicatorOpacity,
+          transition: 'opacity 0.2s ease-out'
+        }}
         className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 pointer-events-none z-20"
       >
         <span className="text-[10px] font-black tracking-[0.4em] uppercase text-white/70 select-none">
@@ -155,7 +187,7 @@ export default function Overlay({ containerRef }: { containerRef?: React.RefObje
             className="absolute left-0 right-0 h-5 bg-[#ef4444] shadow-[0_0_12px_#ef4444]"
           />
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

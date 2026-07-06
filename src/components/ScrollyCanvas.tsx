@@ -55,33 +55,41 @@ export default function ScrollyCanvas({ containerRef }: { containerRef?: React.R
     ctx.drawImage(img, sx, sy, sw, sh);
   }, [getClosestLoadedIndex]);
 
-  useMotionValueEvent(scrollYProgress, 'change', (v) => {
-    const index = Math.min(
-      Math.max(Math.round(v * (FRAME_COUNT - 1)), 0),
-      FRAME_COUNT - 1
-    );
-    if (index === currentFrameRef.current) return;
-    currentFrameRef.current = index;
-    cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(() => renderFrame(index));
-  });
-
+  // Track page scroll progress via native scroll listener to avoid hook mount race conditions
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    const handleScroll = () => {
+      const section = containerRef?.current;
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      const scrollableHeight = rect.height - window.innerHeight;
+      if (scrollableHeight <= 0) return;
+      
+      const scrolled = -rect.top;
+      const p = Math.min(Math.max(scrolled / scrollableHeight, 0), 1);
+      
+      const index = Math.min(
+        Math.max(Math.round(p * (FRAME_COUNT - 1)), 0),
+        FRAME_COUNT - 1
+      );
+      if (index === currentFrameRef.current) return;
+      currentFrameRef.current = index;
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => renderFrame(index));
+    };
+
     const resize = () => {
       const dpr = window.devicePixelRatio || 1;
-      // Set the backing store resolution directly to window dimensions
-      // to avoid 300x150 default size on initial mount before layout completes
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
-
-      renderFrame(currentFrameRef.current);
+      handleScroll();
     };
 
     resize();
     window.addEventListener('resize', resize);
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     const loadImages = () => {
       // 1. Load the first frame immediately so the canvas is not blank
@@ -127,6 +135,7 @@ export default function ScrollyCanvas({ containerRef }: { containerRef?: React.R
 
     return () => {
       window.removeEventListener('resize', resize);
+      window.removeEventListener('scroll', handleScroll);
       cancelAnimationFrame(rafRef.current);
     };
   }, [renderFrame]);
