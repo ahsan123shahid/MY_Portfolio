@@ -4,6 +4,7 @@ import { useEffect, useRef, useCallback } from 'react';
 import { useScroll, useMotionValueEvent } from 'framer-motion';
 
 const FRAME_COUNT = 200;
+const BASE_PATH = process.env.NODE_ENV === 'production' ? '/MY_Portfolio' : '';
 
 export default function ScrollyCanvas({ containerRef }: { containerRef?: React.RefObject<HTMLDivElement> }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -71,57 +72,55 @@ export default function ScrollyCanvas({ containerRef }: { containerRef?: React.R
 
     const resize = () => {
       const dpr = window.devicePixelRatio || 1;
-      // Set the resolution of the backing store
+      // Set the backing store resolution directly to window dimensions
+      // to avoid 300x150 default size on initial mount before layout completes
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
-      // Set the visual size
-      canvas.style.width = `${window.innerWidth}px`;
-      canvas.style.height = `${window.innerHeight}px`;
-      
-      // We draw directly into the backing store coordinates (cw, ch) in renderFrame.
-      // Do NOT apply ctx.scale(dpr, dpr) here because we are calculating the drawing
-      // sizes based on the backing store canvas width/height (which already incorporates dpr).
+
       renderFrame(currentFrameRef.current);
     };
 
     resize();
     window.addEventListener('resize', resize);
 
-    const loadImages = async () => {
+    const loadImages = () => {
       // 1. Load the first frame immediately so the canvas is not blank
       const firstImg = new Image();
-      firstImg.src = `/sequence/frame_000_delay-0.05s.webp`;
-      await new Promise<void>((resolve) => {
-        firstImg.onload = () => resolve();
-        firstImg.onerror = () => resolve();
-      });
-      imagesRef.current[0] = firstImg;
-      renderFrame(0);
+      firstImg.onload = () => {
+        imagesRef.current[0] = firstImg;
+        renderFrame(0);
 
-      // 2. Load the rest of the frames in small batches in the background
-      const batchSize = 8;
-      for (let i = 1; i < FRAME_COUNT; i += batchSize) {
-        const promises = [];
-        for (let j = 0; j < batchSize && (i + j) < FRAME_COUNT; j++) {
-          const index = i + j;
+        // 2. Once first frame is active, stream all other frames concurrently
+        for (let i = 1; i < FRAME_COUNT; i++) {
+          const index = i;
           const pad = String(index).padStart(3, '0');
           const img = new Image();
-          const p = new Promise<void>((resolve) => {
-            img.onload = () => {
-              imagesRef.current[index] = img;
-              // If the scroll position has moved or is currently here, re-render
-              if (currentFrameRef.current === index) {
-                renderFrame(index);
-              }
-              resolve();
-            };
-            img.onerror = () => resolve();
-            img.src = `/sequence/frame_${pad}_delay-0.05s.webp`;
-          });
-          promises.push(p);
+          img.onload = () => {
+            imagesRef.current[index] = img;
+            // If the user has scrolled to this frame, render it immediately
+            if (currentFrameRef.current === index) {
+              renderFrame(index);
+            }
+          };
+          img.src = `${BASE_PATH}/sequence/frame_${pad}_delay-0.05s.webp`;
         }
-        await Promise.all(promises);
-      }
+      };
+      firstImg.onerror = () => {
+        // Fallback: trigger background loads even if first frame failed
+        for (let i = 1; i < FRAME_COUNT; i++) {
+          const index = i;
+          const pad = String(index).padStart(3, '0');
+          const img = new Image();
+          img.onload = () => {
+            imagesRef.current[index] = img;
+            if (currentFrameRef.current === index) {
+              renderFrame(index);
+            }
+          };
+          img.src = `${BASE_PATH}/sequence/frame_${pad}_delay-0.05s.webp`;
+        }
+      };
+      firstImg.src = `${BASE_PATH}/sequence/frame_000_delay-0.05s.webp`;
     };
 
     loadImages();
@@ -135,8 +134,7 @@ export default function ScrollyCanvas({ containerRef }: { containerRef?: React.R
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 block"
-      style={{ objectFit: 'cover' }}
+      className="absolute inset-0 w-full h-full block"
     />
   );
 }

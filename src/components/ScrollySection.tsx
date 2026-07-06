@@ -8,8 +8,8 @@ export default function ScrollySection() {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section ref={sectionRef} className="relative h-[500vh]">
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#121212]">
+    <section ref={sectionRef} className="relative w-full" style={{ height: '500vh', minHeight: '3200px' }}>
+      <div className="sticky top-0 w-full overflow-hidden bg-[#121212]" style={{ height: '100vh', minHeight: '600px' }}>
         <ScrollyCanvas containerRef={sectionRef} />
         <Overlay containerRef={sectionRef} />
       </div>

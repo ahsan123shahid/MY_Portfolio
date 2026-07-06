@@ -18,7 +18,7 @@ const sections = [
     showCta: true,
   },
   {
-    at: 0.38,
+    at: 0.35,
     subtitle: '01 / PHILOSOPHY',
     titleNode: (
       <>
@@ -32,7 +32,7 @@ const sections = [
     showCta: false,
   },
   {
-    at: 0.72,
+    at: 0.65,
     subtitle: '02 / ENGINEERING',
     titleNode: (
       <>
@@ -69,7 +69,7 @@ function Section({
   const y = useTransform(
     scrollYProgress,
     [start, end],
-    [60, -60]
+    [30, -30]
   );
 
   // Soft scale zoom
@@ -127,7 +127,7 @@ export default function Overlay({ containerRef }: { containerRef?: React.RefObje
   const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
 
   return (
-    <div className="absolute inset-0 z-10">
+    <div className="absolute inset-0 z-10 pointer-events-none">
       {sections.map((s, i) => (
         <Section key={i} section={s} scrollYProgress={scrollYProgress} />
       ))}
