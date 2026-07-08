@@ -13,7 +13,7 @@ export default function WhatsAppButton() {
       transition={{ delay: 1, duration: 0.5 }}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
-      className="fixed bottom-[48px] right-[108px] z-50 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-tr from-[#25D366] to-[#128C7E] text-white shadow-[0_4px_20px_rgba(37,211,102,0.35)] hover:shadow-[0_4px_30px_rgba(37,211,102,0.55)] transition-shadow duration-300 cursor-pointer"
+      className="fixed bottom-6 right-6 sm:bottom-10 sm:right-10 z-50 flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-gradient-to-tr from-[#25D366] to-[#128C7E] text-white shadow-[0_4px_20px_rgba(37,211,102,0.35)] hover:shadow-[0_4px_30px_rgba(37,211,102,0.55)] transition-shadow duration-300 cursor-pointer"
       aria-label="Chat on WhatsApp"
     >
       {/* Outer pulsing animation ring */}
@@ -21,7 +21,7 @@ export default function WhatsAppButton() {
 
       {/* WhatsApp SVG Icon */}
       <svg
-        className="w-10 h-10 fill-current"
+        className="w-7 h-7 sm:w-8 sm:h-8 fill-current"
         viewBox="0 0 24 24"
         xmlns="http://www.w3.org/2000/svg"
       >

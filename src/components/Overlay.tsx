@@ -14,7 +14,7 @@ const sections = [
       </>
     ),
     description: 'I design and build intelligent digital experiences that are bold, strategic, and production-grade.',
-    align: 'justify-center items-center text-center' as const,
+    align: 'justify-center items-center text-center px-4' as const,
     descAlign: 'mx-auto',
     showCta: true,
   },
@@ -28,7 +28,7 @@ const sections = [
       </>
     ),
     description: 'Designing custom RAG pipelines, fine-tuned embeddings, and high-throughput vector search architectures—not just calling standard API wrappers.',
-    align: 'justify-start items-center text-left px-6 sm:px-16 md:px-24' as const,
+    align: 'justify-start items-center text-left px-4 sm:px-16 md:px-24' as const,
     descAlign: 'mr-auto',
     showCta: false,
   },
@@ -42,7 +42,7 @@ const sections = [
       </>
     ),
     description: 'Fusing the intelligence of advanced machine learning models with production-grade full-stack backend and frontend engineering.',
-    align: 'justify-end items-center text-right px-6 sm:px-16 md:px-24' as const,
+    align: 'justify-end items-center text-right px-4 sm:px-16 md:px-24' as const,
     descAlign: 'ml-auto',
     showCta: false,
   },
@@ -96,17 +96,17 @@ function Section({
         transition: 'opacity 0.15s ease-out, transform 0.15s ease-out',
       }}
     >
-      <div className="max-w-5xl px-6 select-none pointer-events-auto">
+      <div className="max-w-5xl px-2 sm:px-6 select-none pointer-events-auto">
         {section.subtitle && (
-          <span className="inline-block mb-3 text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase text-[#ef4444]">
+          <span className="inline-block mb-2 sm:mb-3 text-[10px] sm:text-xs md:text-sm font-semibold tracking-[0.15em] sm:tracking-[0.25em] uppercase text-[#ef4444]">
             {section.subtitle}
           </span>
         )}
-        <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black leading-[0.9] tracking-tighter uppercase text-white mb-6 select-none">
+        <h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.9] tracking-tighter uppercase text-white mb-4 sm:mb-6 select-none">
           {section.titleNode}
         </h1>
         {section.description && (
-          <p className={`max-w-md sm:max-w-lg text-sm sm:text-base leading-relaxed text-white/50 mb-8 ${section.descAlign}`}>
+          <p className={`max-w-xs sm:max-w-md md:max-w-lg text-xs sm:text-sm md:text-base leading-relaxed text-white/50 mb-6 sm:mb-8 ${section.descAlign}`}>
             {section.description}
           </p>
         )}
@@ -116,7 +116,7 @@ function Section({
               const el = document.getElementById('projects');
               if (el) el.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="group pointer-events-auto inline-flex items-center gap-3 rounded-lg border border-white/20 bg-transparent px-6 py-3.5 text-xs font-bold uppercase tracking-[0.20em] text-white transition-all duration-300 hover:border-[#ef4444] hover:bg-[#ef4444]/10 cursor-pointer"
+            className="group pointer-events-auto inline-flex items-center gap-2 sm:gap-3 rounded-lg border border-white/20 bg-transparent px-5 py-3 sm:px-6 sm:py-3.5 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-[0.20em] text-white transition-all duration-300 hover:border-[#ef4444] hover:bg-[#ef4444]/10 cursor-pointer"
           >
             <span>View My Work</span>
             <span className="text-xs transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">

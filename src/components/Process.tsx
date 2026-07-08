@@ -99,7 +99,7 @@ export default function Process() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: '-50px' }}
-          className="grid gap-8 md:grid-cols-5"
+          className="grid gap-6 sm:gap-8 grid-cols-2 sm:grid-cols-3 md:grid-cols-5"
         >
           {steps.map((step, idx) => (
             <motion.div

@@ -29,7 +29,7 @@ export default function ContactForm() {
             <span className="inline-block mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-[#ef4444]">
               Start a project
             </span>
-            <h2 className="text-3xl sm:text-5xl md:text-6xl font-black leading-[0.95] tracking-tighter uppercase text-white mb-10 select-none">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[0.95] tracking-tighter uppercase text-white mb-8 sm:mb-10 select-none">
               LET&apos;S CREATE <br />
               SOMETHING <span className="text-[#ef4444]">BOLD.</span>
             </h2>
@@ -88,7 +88,7 @@ export default function ContactForm() {
           </div>
 
           {/* Right Column: Contact Form */}
-          <div className="lg:col-span-7 bg-white/[0.01] border border-white/[0.05] rounded-2xl p-8 sm:p-12 backdrop-blur-md">
+          <div className="lg:col-span-7 bg-white/[0.01] border border-white/[0.05] rounded-2xl p-5 sm:p-8 md:p-12 backdrop-blur-md">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid gap-6 sm:grid-cols-2">
                 {/* Name */}

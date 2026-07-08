@@ -9,7 +9,7 @@ export default function Testimonial() {
       <div className="absolute top-0 left-12 right-12 h-[1px] bg-gradient-to-r from-white/[0.03] via-white/[0.08] to-white/[0.03]" />
 
       <div className="mx-auto max-w-7xl">
-        <div className="relative rounded-2xl border border-white/[0.05] bg-white/[0.01] p-8 sm:p-12 md:p-16 backdrop-blur-md">
+        <div className="relative rounded-2xl border border-white/[0.05] bg-white/[0.01] p-5 sm:p-8 md:p-12 lg:p-16 backdrop-blur-md">
           {/* Top highlight indicator */}
           <div className="absolute top-0 left-12 right-12 h-[1px] bg-gradient-to-r from-transparent via-[#ef4444]/20 to-transparent" />
 
@@ -21,7 +21,7 @@ export default function Testimonial() {
 
             {/* Quote details */}
             <div className="text-left">
-              <blockquote className="text-lg sm:text-xl md:text-2xl font-bold leading-relaxed text-white/90 mb-8 italic">
+              <blockquote className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold leading-relaxed text-white/90 mb-6 sm:mb-8 italic">
                 &ldquo;Ahsan&apos;s implementation of our FastAPI CRM and custom AI parsing scripts completely transformed our UK energy lead pipelines. He resolved critical serverless DB leaks and automated unstructured data parsing that saves our sales desk hours every day.&rdquo;
               </blockquote>
               

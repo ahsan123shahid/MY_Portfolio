@@ -8,6 +8,18 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Remove tap highlight on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Ensure touch elements are responsive */
+a, button, [role="button"] {
+  touch-action: manipulation;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -16,7 +28,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Custom premium scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -54,4 +66,21 @@ html {
 
 .backface-hidden {
   backface-visibility: hidden;
+}
+
+/* Mobile: disable 3D tilt effects as they rely on mouse events */
+@media (hover: none) and (pointer: coarse) {
+  .perspective-1000 {
+    perspective: none;
+  }
+  .preserve-3d {
+    transform-style: flat;
+  }
+}
+
+/* Safe area insets for notched phones */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .fixed.bottom-6 {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
